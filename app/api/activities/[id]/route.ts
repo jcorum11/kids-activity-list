@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateActivity, deleteActivity } from "@/lib/queries";
 
-type Props = {
-  params: {
-    id: string;
-  };
-};
-
-export async function PUT(request: NextRequest, context: Props) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+): Promise<NextResponse> {
   try {
     const body = await request.json();
     const updatedActivity = await updateActivity({
-      id: parseInt(context.params.id),
+      id: parseInt(params.id),
       ...body,
     });
     if (!updatedActivity) {
@@ -30,9 +27,12 @@ export async function PUT(request: NextRequest, context: Props) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: Props) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+): Promise<NextResponse> {
   try {
-    await deleteActivity(parseInt(context.params.id));
+    await deleteActivity(parseInt(params.id));
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting activity:", error);
