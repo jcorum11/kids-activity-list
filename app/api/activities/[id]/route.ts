@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateActivity, deleteActivity } from "@/lib/queries";
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-): Promise<NextResponse> {
+export async function PUT(request: NextRequest): Promise<NextResponse> {
   try {
+    const id = request.url.split("/").pop();
+    if (!id) {
+      return NextResponse.json(
+        { error: "Activity ID is required" },
+        { status: 400 }
+      );
+    }
+
     const body = await request.json();
     const updatedActivity = await updateActivity({
-      id: parseInt(params.id),
+      id: parseInt(id),
       ...body,
     });
     if (!updatedActivity) {
@@ -27,12 +32,17 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
   try {
-    await deleteActivity(parseInt(params.id));
+    const id = request.url.split("/").pop();
+    if (!id) {
+      return NextResponse.json(
+        { error: "Activity ID is required" },
+        { status: 400 }
+      );
+    }
+
+    await deleteActivity(parseInt(id));
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting activity:", error);
