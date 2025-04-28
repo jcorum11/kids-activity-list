@@ -10,10 +10,11 @@ interface ActivityListProps {
 }
 
 export default function ActivityList({ initialActivities }: ActivityListProps) {
-  const [activities] = useState(initialActivities);
+  const [activities, setActivities] = useState(initialActivities);
   const [location, setLocation] = useState("all");
   const [ageRange, setAgeRange] = useState("all");
   const [randomActivity, setRandomActivity] = useState<Activity | null>(null);
+  const [isDeleting, setIsDeleting] = useState<number | null>(null);
 
   const filteredActivities = activities.filter((activity) => {
     const matchesLocation =
@@ -47,6 +48,31 @@ export default function ActivityList({ initialActivities }: ActivityListProps) {
     setRandomActivity(filtered[randomIndex]);
   };
 
+  const handleDelete = async (id: number) => {
+    if (isDeleting === id) return;
+
+    setIsDeleting(id);
+    try {
+      const response = await fetch(`/api/activities/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete activity");
+      }
+
+      setActivities(activities.filter((activity) => activity.id !== id));
+      if (randomActivity?.id === id) {
+        setRandomActivity(null);
+      }
+    } catch (error) {
+      console.error("Error deleting activity:", error);
+      alert("Failed to delete activity. Please try again.");
+    } finally {
+      setIsDeleting(null);
+    }
+  };
+
   return (
     <>
       <div className="max-w-4xl mx-auto">
@@ -64,16 +90,29 @@ export default function ActivityList({ initialActivities }: ActivityListProps) {
               Your Random Activity
             </h2>
             <div className="bg-green-50 border-2 border-green-200 rounded-lg shadow-lg p-6">
-              <h3 className="text-xl font-semibold mb-2">
-                {randomActivity.name}
-              </h3>
-              <p className="text-gray-600 mb-4">{randomActivity.description}</p>
-              <div className="flex gap-4 text-sm text-gray-500">
-                <span>Age: {randomActivity.age_range}</span>
-                <span>•</span>
-                <span>{randomActivity.duration_minutes} minutes</span>
-                <span>•</span>
-                <span>{randomActivity.indoor ? "Indoor" : "Outdoor"}</span>
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    {randomActivity.name}
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    {randomActivity.description}
+                  </p>
+                  <div className="flex gap-4 text-sm text-gray-500">
+                    <span>Age: {randomActivity.age_range}</span>
+                    <span>•</span>
+                    <span>{randomActivity.duration_minutes} minutes</span>
+                    <span>•</span>
+                    <span>{randomActivity.indoor ? "Indoor" : "Outdoor"}</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleDelete(randomActivity.id)}
+                  disabled={isDeleting === randomActivity.id}
+                  className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                >
+                  {isDeleting === randomActivity.id ? "Deleting..." : "Delete"}
+                </button>
               </div>
             </div>
           </div>
@@ -104,6 +143,13 @@ export default function ActivityList({ initialActivities }: ActivityListProps) {
                       <span>{activity.indoor ? "Indoor" : "Outdoor"}</span>
                     </div>
                   </div>
+                  <button
+                    onClick={() => handleDelete(activity.id)}
+                    disabled={isDeleting === activity.id}
+                    className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                  >
+                    {isDeleting === activity.id ? "Deleting..." : "Delete"}
+                  </button>
                 </div>
               </div>
             ))}
