@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Activity } from "@/lib/types";
 
 export default function AddActivityForm() {
   const [isOpen, setIsOpen] = useState(false);
