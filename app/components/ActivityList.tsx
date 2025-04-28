@@ -16,6 +16,19 @@ export default function ActivityList({ initialActivities }: ActivityListProps) {
   const [randomActivity, setRandomActivity] = useState<Activity | null>(null);
   const [isDeleting, setIsDeleting] = useState<number | null>(null);
 
+  const refreshActivities = async () => {
+    try {
+      const response = await fetch("/api/activities");
+      if (!response.ok) {
+        throw new Error("Failed to fetch activities");
+      }
+      const data = await response.json();
+      setActivities(data);
+    } catch (error) {
+      console.error("Error refreshing activities:", error);
+    }
+  };
+
   const filteredActivities = activities.filter((activity) => {
     const matchesLocation =
       location === "all" ||
@@ -76,7 +89,7 @@ export default function ActivityList({ initialActivities }: ActivityListProps) {
   return (
     <>
       <div className="max-w-4xl mx-auto">
-        <AddActivityForm />
+        <AddActivityForm onActivityAdded={refreshActivities} />
         <ActivityControls
           onLocationChange={handleLocationChange}
           onAgeRangeChange={handleAgeRangeChange}

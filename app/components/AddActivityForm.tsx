@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 
-export default function AddActivityForm() {
+interface AddActivityFormProps {
+  onActivityAdded: () => Promise<void>;
+}
+
+export default function AddActivityForm({
+  onActivityAdded,
+}: AddActivityFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -37,8 +43,8 @@ export default function AddActivityForm() {
       });
       setIsOpen(false);
 
-      // Refresh the page to show the new activity
-      window.location.reload();
+      // Refresh the activities list
+      await onActivityAdded();
     } catch (error) {
       console.error("Error adding activity:", error);
       alert("Failed to add activity. Please try again.");
@@ -60,45 +66,61 @@ export default function AddActivityForm() {
             <h2 className="text-2xl font-semibold mb-4">Add New Activity</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Activity Name
                 </label>
                 <input
                   type="text"
-                  required
+                  id="name"
+                  name="name"
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Enter activity name"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Description
                 </label>
                 <textarea
-                  required
+                  id="description"
+                  name="description"
                   value={formData.description}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  rows={3}
+                  required
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Enter activity description"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="age_range"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Age Range
                 </label>
                 <select
+                  id="age_range"
+                  name="age_range"
                   value={formData.age_range}
                   onChange={(e) =>
                     setFormData({ ...formData, age_range: e.target.value })
                   }
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
                   <option value="3-5">3-5 years</option>
                   <option value="6-8">6-8 years</option>
@@ -107,13 +129,16 @@ export default function AddActivityForm() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="duration_minutes"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Duration (minutes)
                 </label>
                 <input
                   type="number"
-                  required
-                  min="1"
+                  id="duration_minutes"
+                  name="duration_minutes"
                   value={formData.duration_minutes}
                   onChange={(e) =>
                     setFormData({
@@ -121,7 +146,10 @@ export default function AddActivityForm() {
                       duration_minutes: parseInt(e.target.value),
                     })
                   }
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                  min="1"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Enter duration in minutes"
                 />
               </div>
 
@@ -129,11 +157,12 @@ export default function AddActivityForm() {
                 <input
                   type="checkbox"
                   id="indoor"
+                  name="indoor"
                   checked={formData.indoor}
                   onChange={(e) =>
                     setFormData({ ...formData, indoor: e.target.checked })
                   }
-                  className="h-4 w-4 text-blue-500 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                 />
                 <label
                   htmlFor="indoor"
@@ -143,17 +172,10 @@ export default function AddActivityForm() {
                 </label>
               </div>
 
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                >
-                  Cancel
-                </button>
+              <div className="mt-5 sm:mt-6">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
                 >
                   Add Activity
                 </button>
