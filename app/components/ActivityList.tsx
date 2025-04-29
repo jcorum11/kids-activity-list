@@ -105,7 +105,7 @@ export default function ActivityList({ initialActivities }: ActivityListProps) {
             <div className="bg-green-50 border-2 border-green-200 rounded-lg shadow-lg p-6">
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">
+                  <h3 className="text-purple-700 text-xl font-semibold mb-2">
                     {randomActivity.name}
                   </h3>
                   <p className="text-gray-600 mb-4">
@@ -144,7 +144,7 @@ export default function ActivityList({ initialActivities }: ActivityListProps) {
               >
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">
+                    <h3 className="text-purple-700 text-xl font-semibold mb-2">
                       {activity.name}
                     </h3>
                     <p className="text-gray-600 mb-4">{activity.description}</p>

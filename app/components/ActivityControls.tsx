@@ -15,7 +15,9 @@ export default function ActivityControls({
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Random Activity Section */}
       <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4">Get Random Activity</h2>
+        <h2 className="text-purple-600 text-2xl font-semibold mb-4">
+          Get Random Activity
+        </h2>
         <button
           onClick={onRandomActivity}
           className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
@@ -27,7 +29,7 @@ export default function ActivityControls({
 
       {/* Filters Section */}
       <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4">Filters</h2>
+        <h2 className="text-purple-700 text-2xl font-semibold mb-4">Filters</h2>
         <div className="space-y-4">
           <div>
             <label
@@ -40,7 +42,7 @@ export default function ActivityControls({
               id="location-filter"
               name="location"
               onChange={(e) => onLocationChange(e.target.value)}
-              className="w-full border rounded-lg py-2 px-3"
+              className="text-gray-300 w-full border rounded-lg py-2 px-3"
               aria-label="Filter activities by location"
             >
               <option value="all">All Activities</option>
@@ -59,7 +61,7 @@ export default function ActivityControls({
               id="age-filter"
               name="age"
               onChange={(e) => onAgeRangeChange(e.target.value)}
-              className="w-full border rounded-lg py-2 px-3"
+              className="text-gray-300 w-full border rounded-lg py-2 px-3"
               aria-label="Filter activities by age range"
             >
               <option value="all">All Ages</option>
